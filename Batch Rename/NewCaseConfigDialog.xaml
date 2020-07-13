@@ -1,0 +1,16 @@
+﻿<Window x:Class="Batch_Rename.NewCaseConfigDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Batch_Rename"
+        mc:Ignorable="d"
+        Title="NewCaseConfigDialog" Height="200" Width="300">
+    <StackPanel Margin="10">
+        <Label FontWeight="Bold">Please select a model: </Label>
+        <RadioButton Name="lowerCaseRadioButton" IsChecked="True">Set lower case</RadioButton>
+        <RadioButton Name="upperCaseRadioButton">Set upper case</RadioButton>
+        <RadioButton Name="upperCaseFirstLetterRadioButton">Set uppper case first letter in every word</RadioButton>
+        <Button x:Name="okButton" Click="OkButton_Click" Content="Ok" Width="80" Height="25" HorizontalAlignment="Center" Margin="10"/>
+    </StackPanel>
+</Window>

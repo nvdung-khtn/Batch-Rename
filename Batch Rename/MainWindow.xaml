@@ -1,0 +1,248 @@
+﻿<Window x:Class="Batch_Rename.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Batch_Rename"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="850" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Padding" Value="5,2"/>
+        </Style>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="5,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Canvas>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Background="DarkGray" Orientation="Vertical">
+
+                <StackPanel Orientation="Horizontal">
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/refresh.png"/>
+                            <TextBlock>Refresh</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/help.png"/>
+                            <TextBlock>Help</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="startBatchButton" Click="StartBatchButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/start_batch.png"/>
+                            <TextBlock>START BATCH</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="AddMethod" Click="AddMethod_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/add_method.png"/>
+                            <TextBlock>Add</TextBlock>
+                            
+                            <!--Vị trí chọn phương thức để áp lên file-->
+                            <ComboBox Name="methodComboBox" DropDownClosed="PrototypesComboBox_DropDownClosed" Width="120">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name, Mode=OneWay}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Button>
+
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/top_up.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/up.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/down.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/bottom_down.png"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/load_list.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/save.png"/>
+                        </StackPanel>
+                    </Button>
+                    <Label Content="Presets: "/>
+                    <ComboBox Width="120">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Icons/clean.png"/>
+                            <TextBlock>Clean</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                
+              <!--Phần chứa các method được gọi--> 
+                <ListBox x:Name="operationsListBox" Height="300" SelectionChanged="operationsListBox_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Edit" Click="MenuItem_Click"/>
+                                        <MenuItem Header="Delete" Click="DeleteMenuItem_Click"/>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <!--Giao diện method được chọn-->
+                                <Button Content="{Binding Name}" Width="295" BorderThickness="2" Foreground="Red" FontWeight="Bold" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <!--Lựa chọn vị trí áp dụng method (Name or Extension)-->
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Apply to: "/>
+                    <ComboBox Name="optionApplyMethodComboBox" SelectedIndex="0" SelectedValuePath="Content" Width="184" Margin="5,2" Height="26">
+                        <ComboBoxItem Content="Name And Extension"/>
+                        <ComboBoxItem Content="Name"/>
+                        <ComboBoxItem Content="Extension"/>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Height="412" RenderTransformOrigin="0.673,0.416" >
+                <StackPanel Orientation="Vertical">
+                    <TabControl Name="tab">
+                        <TabItem Name="fileTabItem" Header="Rename File">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Button Click="AddFile_Click" Grid.Row="0" Width="70" HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/add.png"/>
+                                        <TextBlock>Add</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="70,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/top_up.png"/>
+                                    </StackPanel>
+                                </Button >
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="120,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/up.png"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="170,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/down.png"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="220,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/bottom_down.png"/>
+                                    </StackPanel>
+                                </Button>
+                                
+                                <!--Show ra tất cả các file được chọn-->
+                                <ListView Name="filesSelectedListView"  Grid.Row="1" Margin="0,0,5,0">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Filesname" Width="120" DisplayMemberBinding="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <GridViewColumn Header="New Filesname" Width="120" DisplayMemberBinding="{Binding NewFileName}"/>
+                                            <GridViewColumn Header="Path" Width="180" DisplayMemberBinding="{Binding Path}"/>
+                                            <GridViewColumn Header="Error" Width="85" DisplayMemberBinding="{Binding Error}"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </TabItem>
+
+
+
+                        <TabItem Name="folderTabItem" Header="Rename Folders">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Button Name="addFolderButton" Click="AddFolderButton_Click" Grid.Row="0" Width="70" HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/add.png"/>
+                                        <TextBlock>Add</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="70,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/top_up.png"/>
+                                    </StackPanel>
+                                </Button >
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="120,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/up.png"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="170,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/down.png"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Row="0" Width="50" HorizontalAlignment="Left" Margin="220,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/bottom_down.png"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!--Show ra tất cả các folder được chọn-->
+                                <ListView Name="foldersSelectedListView"  Grid.Row="1" Margin="0,0,5,0">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Foldersname" Width="120" DisplayMemberBinding="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <GridViewColumn Header="New Foldersname" Width="120" DisplayMemberBinding="{Binding NewFileName}"/>
+                                            <GridViewColumn Header="Path" Width="180" DisplayMemberBinding="{Binding Path}"/>
+                                            <GridViewColumn Header="Error" Width="85" DisplayMemberBinding="{Binding Error}"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </TabItem>
+
+                    </TabControl>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+
+    </Canvas>
+</Window>
